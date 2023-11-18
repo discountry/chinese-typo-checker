@@ -3,7 +3,7 @@
     "displayName": "Chinese Typo Checker",
     "description": "Auto check Chinese typos and provide quick fix in VS Code.",
     "publisher": "discountry",
-    "version": "0.1.1",
+    "version": "0.1.4",
     "engines": {
       "vscode": "^1.75.0"
     },

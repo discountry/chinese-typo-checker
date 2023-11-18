@@ -3,15 +3,19 @@
 const vscode = require("vscode");
 const axios = require("axios");
 
+let diagnosticCollection;
 // let orange = vscode.window.createOutputChannel("Orange");
-let diagnosticCollection =
-  vscode.languages.createDiagnosticCollection("typoCorrections"); // Move the diagnosticCollection out to the top level
 
 function activate(context) {
+  // 在activate函数中初始化diagnosticCollection
+  diagnosticCollection =
+    vscode.languages.createDiagnosticCollection("typoCorrections");
   // Ensure apiKey and baseUrl are retrieved inside the function that uses them
   let disposable = vscode.commands.registerCommand(
-    "extension.checkChineseText",
+    "extension.checkChineseTypo",
     async function () {
+      diagnosticCollection.clear();
+
       const apiKey = vscode.workspace
         .getConfiguration("chineseTypoChecker")
         .get("openaiApiKey");
@@ -30,10 +34,49 @@ function activate(context) {
   );
 
   context.subscriptions.push(disposable);
-  context.subscriptions.push(diagnosticCollection); // Add the diagnosticCollection to the subscriptions
 
   // Register the custom command here
   registerApplyFixAndClearDiagnosticsCommand(context);
+
+  // Register a code actions provider to handle the diagnostics
+  vscode.languages.registerCodeActionsProvider(
+    "*",
+    {
+      provideCodeActions(document, range, context, token) {
+        // Filter for diagnostics that we've provided
+        const typoDiagnostics = context.diagnostics.filter(
+          (diag) => diag.code === "typoCorrection"
+        );
+
+        // Create a code action for each diagnostic
+        return typoDiagnostics.map((diag) => createCodeAction(document, diag));
+      },
+    },
+    {
+      providedCodeActionKinds: [vscode.CodeActionKind.QuickFix],
+    }
+  );
+}
+
+// This function creates a code action for the given diagnostic
+function createCodeAction(document, diag) {
+  const fix = new vscode.CodeAction(
+    `Fix typo: ${diag.message}`,
+    vscode.CodeActionKind.QuickFix
+  );
+  fix.edit = new vscode.WorkspaceEdit();
+  fix.edit.replace(document.uri, diag.range, diag.correctText);
+  fix.isPreferred = true;
+  fix.diagnostics = [diag];
+
+  // Register a command to the CodeAction which will clear the diagnostics upon execution
+  fix.command = {
+    title: "Fix Typo",
+    command: "chineseTypoChecker.applyFixAndClearDiagnostics",
+    arguments: [document.uri, diag.range, diag],
+  };
+
+  return fix;
 }
 
 function extractChineseLines(editor) {
@@ -134,47 +177,6 @@ function applyCorrections(editor, corrections, chineseLines) {
     .then(() => {
       // Apply the diagnostics to the diagnostic collection
       diagnosticCollection.set(editor.document.uri, diagnostics);
-
-      // Register a code actions provider to handle the diagnostics
-      vscode.languages.registerCodeActionsProvider(
-        "*",
-        {
-          provideCodeActions(document, range, context, token) {
-            // Filter for diagnostics that we've provided
-            const typoDiagnostics = context.diagnostics.filter(
-              (diag) => diag.code === "typoCorrection"
-            );
-
-            // Create a code action for each diagnostic
-            return typoDiagnostics.map((diag) => {
-              const fix = new vscode.CodeAction(
-                `Fix typo: ${diag.message}`,
-                vscode.CodeActionKind.QuickFix
-              );
-              fix.edit = new vscode.WorkspaceEdit();
-              fix.edit.replace(
-                document.uri,
-                diag.range,
-                diag.correctText // 使用存储在诊断中的正确的文本
-              );
-              fix.isPreferred = true;
-              fix.diagnostics = [diag];
-
-              // 注册一个命令到CodeAction, 它会在执行后清除诊断
-              fix.command = {
-                title: "Fix Typo",
-                command: "chineseTypoChecker.applyFixAndClearDiagnostics",
-                arguments: [document.uri, diag.range, diag],
-              };
-
-              return fix;
-            });
-          },
-        },
-        {
-          providedCodeActionKinds: [vscode.CodeActionKind.QuickFix],
-        }
-      );
     });
 }
 
@@ -190,7 +192,10 @@ function registerApplyFixAndClearDiagnosticsCommand(context) {
       await vscode.workspace.applyEdit(edit);
 
       // Clear related diagnostics
-      diagnosticCollection.delete(uri);
+      const remainingDiagnostics = diagnosticCollection
+        .get(uri)
+        .filter((d) => d !== diagnostic);
+      diagnosticCollection.set(uri, remainingDiagnostics);
     }
   );
 
