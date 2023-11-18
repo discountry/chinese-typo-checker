@@ -3,7 +3,7 @@
 const vscode = require("vscode");
 const axios = require("axios");
 
-let orange = vscode.window.createOutputChannel("Orange");
+// let orange = vscode.window.createOutputChannel("Orange");
 let diagnosticCollection =
   vscode.languages.createDiagnosticCollection("typoCorrections"); // Move the diagnosticCollection out to the top level
 
@@ -87,7 +87,7 @@ async function checkChineseText(chineseLines, baseUrl, apiKey) {
   const corrections = JSON.parse(responses.data.choices[0].message.content);
   // ... process responses and fill corrections array
 
-  orange.appendLine(responses.data.choices[0].message.content);
+  // orange.appendLine(responses.data.choices[0].message.content);
 
   return corrections.corrections;
 }
