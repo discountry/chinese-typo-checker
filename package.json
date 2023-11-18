@@ -1,0 +1,50 @@
+{
+    "name": "chinese-typo-checker",
+    "displayName": "Chinese Typo Checker",
+    "description": "Auto check Chinese typos and provide quick fix in VS Code.",
+    "publisher": "discountry",
+    "version": "0.1.0",
+    "engines": {
+      "vscode": "^1.75.0"
+    },
+    "icon": "./icon.png",
+    "main": "./extension.js",
+    "contributes": {
+      "commands": [
+        {
+          "command": "extension.checkChineseTypo",
+          "title": "Check Chinese Typos"
+        }
+      ],
+      "configuration": [
+        {
+          "title": "OpenAI API",
+          "properties": {
+            "chineseTypoChecker.openaiApiKey": {
+              "type": "string",
+              "default": "",
+              "description": "API Key for OpenAI."
+            },
+            "chineseTypoChecker.openaiBaseUrl": {
+              "type": "string",
+              "default": "https://api.openai.com",
+              "description": "Base URL for OpenAI API."
+            }
+          }
+        }
+      ]
+    },
+    "devDependencies": {
+      "vscode": "^1.1.37",
+      "eslint": "^7.1.0",
+      "@types/node": "^12.12.47",
+      "@types/vscode": "^1.50.0"
+    },
+    "dependencies": {
+      "axios": "^0.21.1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/discountry/chinese-typo-checker.git"
+    }
+  }
