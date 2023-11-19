@@ -10,6 +10,8 @@ Auto check Chinese typos and provide quick fix in VS Code.
 
 Download and install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=discountry.chinese-typo-checker)
 
+![settings](./assets/settings.png)
+
 Open extension config and set your own openai apikey.
 
 ```
@@ -17,6 +19,8 @@ ctrl + shift + p
 ```
 
 Type and select `Check Chinese Typos`.
+
+![usage](./assets/usage.png)
 
 Watch the magic.
 

@@ -12,6 +12,8 @@
 
 从 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=discountry.chinese-typo-checker) 下载并安装
 
+![设置](./assets/settings.png)
+
 打开扩展配置并设置您自己的 openai apikey。
 
 ```
@@ -19,6 +21,8 @@ ctrl + shift + p
 ```
 
 输入并选择 `检查中文错别字`。
+
+![使用](./assets/usage.png)
 
 观看魔法。
 
