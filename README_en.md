@@ -8,6 +8,8 @@ Auto check Chinese typos and provide quick fix in VS Code.
 
 ## Installation
 
+[Intro on Youtube](https://www.youtube.com/watch?v=HVVXktaCCPk)
+
 Download and install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=discountry.chinese-typo-checker)
 
 ![settings](./assets/settings.png)

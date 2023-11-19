@@ -10,6 +10,8 @@
 
 ## 安装
 
+[Youtube 视频简介](https://www.youtube.com/watch?v=HVVXktaCCPk)
+
 从 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=discountry.chinese-typo-checker) 下载并安装
 
 ![设置](./assets/settings.png)
