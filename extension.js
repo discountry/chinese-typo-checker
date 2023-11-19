@@ -3,8 +3,9 @@
 const vscode = require("vscode");
 const axios = require("axios");
 
+let statusBarItem;
+
 let diagnosticCollection;
-// let orange = vscode.window.createOutputChannel("Orange");
 
 function activate(context) {
   // 在activate函数中初始化diagnosticCollection
@@ -56,6 +57,76 @@ function activate(context) {
       providedCodeActionKinds: [vscode.CodeActionKind.QuickFix],
     }
   );
+
+  // 创建状态栏项并初始化
+  statusBarItem = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Right
+  );
+  statusBarItem.command = "chineseTypoChecker.applyAllFixes";
+  statusBarItem.show();
+  context.subscriptions.push(statusBarItem);
+
+  // 注册状态栏项点击事件处理函数
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "chineseTypoChecker.applyAllFixes",
+      applyAllFixes
+    )
+  );
+
+  // 当诊断更新时，更新状态栏项
+  vscode.languages.onDidChangeDiagnostics(updateStatusBarItem);
+
+  // 初始化状态栏项内容
+  updateStatusBarItem();
+}
+
+function updateStatusBarItem() {
+  // 只检查当前活动编辑器的诊断信息
+  const activeEditor = vscode.window.activeTextEditor;
+  if (activeEditor) {
+    const diagnostics = diagnosticCollection.get(activeEditor.document.uri);
+    const totalDiagnostics = diagnostics ? diagnostics.length : 0;
+
+    if (totalDiagnostics > 0) {
+      statusBarItem.text = `$(question) ${totalDiagnostics}`;
+      statusBarItem.tooltip = "Click to apply all typo corrections";
+    } else {
+      statusBarItem.text = `$(check) 文`;
+      statusBarItem.tooltip = "No typo corrections";
+    }
+  } else {
+    // 如果没有活动的编辑器，显示默认状态
+    statusBarItem.text = `$(check) 文`;
+    statusBarItem.tooltip = "No active editor";
+  }
+}
+
+async function applyAllFixes() {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) {
+    return; // No open text editor
+  }
+
+  const diagnostics = diagnosticCollection.get(editor.document.uri);
+  if (!diagnostics || diagnostics.length === 0) {
+    return; // No diagnostics to apply fixes to
+  }
+
+  const edit = new vscode.WorkspaceEdit();
+
+  for (const diagnostic of diagnostics) {
+    edit.replace(editor.document.uri, diagnostic.range, diagnostic.correctText);
+  }
+
+  // Apply all edits
+  await vscode.workspace.applyEdit(edit);
+
+  // Clear all diagnostics
+  diagnosticCollection.clear();
+
+  // Update the status bar item
+  updateStatusBarItem();
 }
 
 // This function creates a code action for the given diagnostic
@@ -129,9 +200,6 @@ async function checkChineseText(chineseLines, baseUrl, apiKey) {
   // Process API responses and extract corrections
   const corrections = JSON.parse(responses.data.choices[0].message.content);
   // ... process responses and fill corrections array
-
-  // orange.appendLine(responses.data.choices[0].message.content);
-
   return corrections.corrections;
 }
 

@@ -3,11 +3,21 @@
     "displayName": "Chinese Typo Checker",
     "description": "Auto check Chinese typos and provide quick fix in VS Code.",
     "publisher": "discountry",
-    "version": "0.1.4",
+    "categories":[
+      "Other"
+    ],
+    "keywords": [
+      "Chinese",
+      "typo",
+      "checker",
+      "openai"
+    ],
+    "license": "MIT",
+    "version": "0.1.5",
     "engines": {
       "vscode": "^1.75.0"
     },
-    "icon": "./icon.png",
+    "icon": "./assets/icon.png",
     "main": "./extension.js",
     "contributes": {
       "commands": [
