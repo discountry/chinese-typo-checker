@@ -19,17 +19,20 @@ function activate(context) {
 
       const apiKey = vscode.workspace
         .getConfiguration("chineseTypoChecker")
-        .get("openaiApiKey");
+        .get("llamaApiKey");
       const baseUrl = vscode.workspace
         .getConfiguration("chineseTypoChecker")
-        .get("openaiBaseUrl");
+        .get("llamaBaseUrl");
+      const model = vscode.workspace
+        .getConfiguration("chineseTypoChecker")
+        .get("llamaModel");
       const editor = vscode.window.activeTextEditor;
       if (!editor) {
         return; // No open text editor
       }
 
       const chineseLines = extractChineseLines(editor);
-      const corrections = await checkChineseText(chineseLines, baseUrl, apiKey);
+      const corrections = await checkChineseText(chineseLines, baseUrl, apiKey, model);
       applyCorrections(editor, corrections, chineseLines);
     }
   );
@@ -173,12 +176,12 @@ function extractChineseLines(editor) {
   return chineseLines;
 }
 
-async function checkChineseText(chineseLines, baseUrl, apiKey) {
+async function checkChineseText(chineseLines, baseUrl, apiKey, model) {
   // Call OpenAI API
   const responses = await axios.post(
-    `${baseUrl}/v1/chat/completions`,
+    `${baseUrl}/api/chat`,
     {
-      model: "gpt-3.5-turbo-1106",
+      model,
       messages: [
         {
           role: "system",
@@ -187,8 +190,9 @@ async function checkChineseText(chineseLines, baseUrl, apiKey) {
         },
         { role: "user", content: JSON.stringify(chineseLines) },
       ],
+      stream: false,
       temperature: 0,
-      response_format: { type: "json_object" },
+      format: "json",
     },
     {
       headers: {
@@ -198,7 +202,7 @@ async function checkChineseText(chineseLines, baseUrl, apiKey) {
   );
 
   // Process API responses and extract corrections
-  const corrections = JSON.parse(responses.data.choices[0].message.content);
+  const corrections = JSON.parse(responses.data.message.content);
   // ... process responses and fill corrections array
   return corrections.corrections;
 }

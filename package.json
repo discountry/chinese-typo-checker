@@ -1,60 +1,66 @@
 {
-    "name": "chinese-typo-checker",
-    "displayName": "Chinese Typo Checker",
-    "description": "Auto check Chinese typos and provide quick fix in VS Code.",
-    "publisher": "discountry",
-    "categories":[
-      "Other"
+  "name": "chinese-typo-checker",
+  "displayName": "Chinese Typo Checker",
+  "description": "Auto check Chinese typos and provide quick fix in VS Code.",
+  "publisher": "discountry",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "Chinese",
+    "typo",
+    "checker",
+    "openai"
+  ],
+  "license": "MIT",
+  "version": "0.1.9",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "icon": "./assets/icon.png",
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.checkChineseTypo",
+        "title": "Check Chinese Typos"
+      }
     ],
-    "keywords": [
-      "Chinese",
-      "typo",
-      "checker",
-      "openai"
-    ],
-    "license": "MIT",
-    "version": "0.1.7",
-    "engines": {
-      "vscode": "^1.75.0"
-    },
-    "icon": "./assets/icon.png",
-    "main": "./extension.js",
-    "contributes": {
-      "commands": [
-        {
-          "command": "extension.checkChineseTypo",
-          "title": "Check Chinese Typos"
-        }
-      ],
-      "configuration": [
-        {
-          "title": "OpenAI API",
-          "properties": {
-            "chineseTypoChecker.openaiApiKey": {
-              "type": "string",
-              "default": "",
-              "description": "API Key for OpenAI."
-            },
-            "chineseTypoChecker.openaiBaseUrl": {
-              "type": "string",
-              "default": "https://api.openai.com",
-              "description": "Base URL for OpenAI API."
-            }
+    "configuration": [
+      {
+        "title": "Llama",
+        "properties": {
+          "chineseTypoChecker.llamaApiKey": {
+            "type": "string",
+            "default": "",
+            "description": "API Key for llama service."
+          },
+          "chineseTypoChecker.llamaBaseUrl": {
+            "type": "string",
+            "default": "http://localhost:11434",
+            "description": "Base URL for Llama."
+          },
+          "chineseTypoChecker.llamaModel": {
+            "type": "string",
+            "default": "qwen2",
+            "description": "Model for Llama."
           }
         }
-      ]
-    },
-    "devDependencies": {
-      "vscode": "^1.1.37",
-      "eslint": "^7.1.0",
-      "@types/node": "^12.12.47",
-      "@types/vscode": "^1.50.0"
-    },
-    "dependencies": {
-      "axios": "^0.21.1"
-    },
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/discountry/chinese-typo-checker.git"
-    }
+      }
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.47",
+    "@types/vscode": "^1.50.0",
+    "eslint": "^7.1.0",
+    "vscode": "^1.1.37"
+  },
+  "dependencies": {
+    "@vscode/vsce": "^2.30.0",
+    "axios": "^1.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/discountry/chinese-typo-checker.git"
   }
+}
