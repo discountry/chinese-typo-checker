@@ -14,10 +14,6 @@
 
 从 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=discountry.chinese-typo-checker) 下载并安装
 
-![设置](./assets/settings.png)
-
-打开扩展配置并设置您自己的 openai apikey。
-
 ### 使用 ollama
 
 ollama 是在本地运行开源语言模型的平台，下载安装 [ollama](https://ollama.com/)
@@ -39,6 +35,10 @@ ctrl + shift + p
 ![使用](./assets/usage.png)
 
 观看魔法。
+
+## 设置
+
+![设置](./assets/settings.png)
 
 ## 预览
 
