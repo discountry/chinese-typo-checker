@@ -42,7 +42,7 @@
           },
           "chineseTypoChecker.llamaModel": {
             "type": "string",
-            "default": "qwen2",
+            "default": "llama3",
             "description": "Model for Llama."
           }
         }

@@ -18,6 +18,18 @@
 
 打开扩展配置并设置您自己的 openai apikey。
 
+### 使用 ollama
+
+ollama 是在本地运行开源语言模型的平台，下载安装 [ollama](https://ollama.com/)
+
+安装完成后加载模型：
+
+```bash
+ollama run llama3
+```
+
+在 VS Code 中使用：
+
 ```
 ctrl + shift + p
 ```
