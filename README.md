@@ -38,6 +38,8 @@ ctrl + shift + p
 
 ## 设置
 
+实测本地 7b 级别的模型均无法稳定完成修改错别字的任务，理解能力不如 gpt3.5，如果你可以使用 gpt 服务，建议下载安装本插件的[0.1.7版本](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/discountry/vsextensions/chinese-typo-checker/0.1.7/vspackage)
+
 ![设置](./assets/settings.png)
 
 ## 预览
